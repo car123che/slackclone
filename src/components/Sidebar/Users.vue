@@ -3,7 +3,7 @@
     <h4>Users</h4>
 
     <!-- channels list -->
-    <div class="mt-4">
+    <div class="mt-4 users">
       <button
         class="list-group-item list-group-item-action"
         v-for="user in users"
@@ -29,7 +29,9 @@
               }"
               >{{ user.name }}</a
             >
-            <span v-if="getNotification(user) >= 1 ">{{getNotification(user)}} </span>
+            <span v-if="getNotification(user) >= 1"
+              >{{ getNotification(user) }}
+            </span>
           </span>
         </span>
       </button>
@@ -112,31 +114,29 @@ export default {
       this.usersRef.off();
       this.presenceRef.off();
       this.connectedRef.off();
-      
-      this.channels.forEach(el => {
-        this.messagesRef.child(el.id).off()
-      })
 
+      this.channels.forEach((el) => {
+        this.messagesRef.child(el.id).off();
+      });
     },
-    resetNotifications(user=null){
-      let channelId = null
-      if(user !== null){
+    resetNotifications(user = null) {
+      let channelId = null;
+      if (user !== null) {
         channelId = this.getChannelId(user.uid);
-      }else{
-        channelId = this.changeChannel.id
+      } else {
+        channelId = this.changeChannel.id;
       }
-      let index = this.notifCount.findIndex(el =>  el.id === channelId);
-      if(index !== -1){
+      let index = this.notifCount.findIndex((el) => el.id === channelId);
+      if (index !== -1) {
         this.notifCount[index].total = this.notifCount[index].lastKnownTotal;
         this.notifCount[index].notif = 0;
       }
-
     },
-    getNotification(user){
+    getNotification(user) {
       let channelId = this.getChannelId(user.uid);
       let notif = 0;
-      this.notifCount.forEach(el =>{
-        if(el.id === channelId){
+      this.notifCount.forEach((el) => {
+        if (el.id === channelId) {
           notif = el.total;
         }
       });
@@ -154,9 +154,9 @@ export default {
       return user.status == "online";
     },
     changeChannel(user) {
-      if(this.channel == null){
+      if (this.channel == null) {
         this.resetNotifications(user);
-      }else{
+      } else {
         this.resetNotifications();
       }
       //we need channel id
@@ -184,13 +184,13 @@ export default {
   beforeDestroy() {
     this.detachListeners();
   },
-  watch:{
-    isPrivate(){
-      if(!this.isPrivate){
+  watch: {
+    isPrivate() {
+      if (!this.isPrivate) {
         this.resetNotifications();
       }
-    }
-  }
+    },
+  },
 };
 </script>    
 
@@ -202,4 +202,35 @@ export default {
 .offline {
   color: red;
 }
+
+h4 {
+  font-family: "Ubuntu", sans-serif;
+  letter-spacing: 1px;
+  text-align: center;
+  font-size: 1.6em;
+}
+
+.list-group-item{
+    width: 85%;
+    margin: auto;
+    font-family: 'Roboto Mono', monospace;
+    font-weight:100;
+    opacity: 0.80;
+  }
+
+.users{
+  margin-bottom: 4em;
+}
+
+.active{
+    background-color: rgb(20, 20, 20);
+    border: solid 1px rgb(49, 47, 47);
+  }
+
+a{
+  text-decoration: none;
+  color: rgb(10, 10, 10);
+}
+
+
 </style>

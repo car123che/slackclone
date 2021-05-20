@@ -1,9 +1,10 @@
 <template>
   <div>
-    <h2>{{ channelName}} </h2>
-    <message :messages="messages"></message>
+    <h2>{{ channelName }}</h2>
+    <div class="messages mb-5">
+      <message :messages="messages"></message>
+    </div>
     <Form></Form>
-
   </div>
 </template>
 
@@ -15,84 +16,95 @@ import Form from "./Form";
 import database from "firebase/database";
 import { mapGetters } from "vuex";
 
-
 export default {
   name: "Messages",
   components: {
     Message,
-    Form
+    Form,
   },
   data() {
     return {
       messagesRef: firebase.database().ref("messages"),
       messages: [],
       channel: null,
-      privateMessagesRef: firebase.database().ref('privateMessages'),
-      listeners: []
+      privateMessagesRef: firebase.database().ref("privateMessages"),
+      listeners: [],
     };
   },
   computed: {
     ...mapGetters(["currentChannel", "currentUser", "isPrivate"]),
     //channel name
-    channelName(){
-      if(this.channel != null){
-        return this.isPrivate ? '@' + this.channel.name :  ' # ' + this.channel.name;
+    channelName() {
+      if (this.channel != null) {
+        return this.isPrivate
+          ? "@" + this.channel.name
+          : " # " + this.channel.name;
       }
-    }
+    },
   },
-  watch:{
-      currentChannel: function(){
-          // this.messages = [];
-          this.detachListeners();
-          this.addListeners();
-          this.channel = this.currentChannel;
-      }
+  watch: {
+    currentChannel: function () {
+      // this.messages = [];
+      this.detachListeners();
+      this.addListeners();
+      this.channel = this.currentChannel;
+    },
   },
-  beforeDestroy(){
+  beforeDestroy() {
     this.detachListeners();
   },
-  methods:{
-      addListeners(){
-        let ref = this.getMessagesRef();
+  methods: {
+    addListeners() {
+      let ref = this.getMessagesRef();
 
-          ref.child(this.currentChannel.id).on('child_added', (snapshot) => {
-            let message = snapshot.val();
-            message['id'] = snapshot.key;
-              this.messages.push(message);
-                //scrol to the top
-              this.$nextTick(() => {
-                $("html, body").scrollTop($(document).height());
-              });
-
-          });
-          //pass arguments to addtolisteners
-          this.addToListeners(this.currentChannel.id, ref, 'child_added')
-      },
-      addToListeners(id, ref, event){
-        let index = this.listeners.findIndex( el => {
-          return el.id === id && el.ref == ref && el.event === event
+      ref.child(this.currentChannel.id).on("child_added", (snapshot) => {
+        let message = snapshot.val();
+        message["id"] = snapshot.key;
+        this.messages.push(message);
+        //scrol to the top
+        this.$nextTick(() => {
+          $("html, body").scrollTop($(document).height());
         });
-        if(index === -1){
-          this.listeners.push({id:id, ref:ref, event:event})
-        }
-      },
-      detachListeners(){
-          /* if(this.channel !== null){
+      });
+      //pass arguments to addtolisteners
+      this.addToListeners(this.currentChannel.id, ref, "child_added");
+    },
+    addToListeners(id, ref, event) {
+      let index = this.listeners.findIndex((el) => {
+        return el.id === id && el.ref == ref && el.event === event;
+      });
+      if (index === -1) {
+        this.listeners.push({ id: id, ref: ref, event: event });
+      }
+    },
+    detachListeners() {
+      /* if(this.channel !== null){
               this.messagesRef.child(this.channel.id).off()
           } */
-          this.listeners.forEach(listener => {
-            listener.ref.child(listener.id).off(listener.event)
-          });
-          this.listeners = [];
-          this.messages = [];
-        },
-      getMessagesRef(){
-        if(this.isPrivate){
-          return this.privateMessagesRef
-        }else{
-          return this.messagesRef
-        }
+      this.listeners.forEach((listener) => {
+        listener.ref.child(listener.id).off(listener.event);
+      });
+      this.listeners = [];
+      this.messages = [];
+    },
+    getMessagesRef() {
+      if (this.isPrivate) {
+        return this.privateMessagesRef;
+      } else {
+        return this.messagesRef;
       }
-  }
+    },
+  },
 };
 </script>
+
+<style scoped>
+h2 {
+  font-family: "Ubuntu", sans-serif;
+  letter-spacing: 1px;
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 1em;
+}
+
+</style>

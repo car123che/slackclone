@@ -29,20 +29,36 @@ export default {
   margin-top: -3.8em;
 }
 .sidebar {
-  width: 33.5%;
+  width: 38vw;
   display: block;
   float: left;
   position: fixed;
   height: 101%;
-  background-color: black;
+  background:  url('../assets/Fondos/side.png');
+  /* background-color: black; */
+  background-repeat: no-repeat;
+  background-size: cover;
   padding-top: 2em;
   overflow: auto;
+  font-family: 'Roboto Mono', monospace;
 }
 
+.sidebar::-webkit-scrollbar{
+  width: 8px;
+  display: none;
+}
 .content {
-  width: 66%;
+  width: 64vw;
+  background-image: url('../assets/Fondos/tic-tac-toe.png');
+  height: auto; 
   display: block;
   float: left;
   margin-left: 34%;
+  font-family: 'Roboto', sans-serif;
+}
+
+.content::-webkit-scrollbar{
+  width: 8px;
+  display: none;
 }
 </style>

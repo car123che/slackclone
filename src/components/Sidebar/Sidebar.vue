@@ -1,21 +1,21 @@
 <template>
   <div>
-    <h2 class="text-light">#slacdddk"</h2>
+    <h2 class="text-light text-center">SLACKCLONE</h2>
     <hr style="border: 1px solid #333" />
     <span>
       <img
-        class="rounded-circle mt-2"
-        height="30px"
+        class="rounded-circle mt-2 mx-2"
+        height="40px"
         :src="currentUser.photoURL"
       />
-      <span class="text-light"> {{ currentUser.displayName }}</span>
+      <span class="text-light nombre"> {{ currentUser.displayName }}</span>
     </span>
 
-    <hr style="border: 1px solid #333" />
-    <button @click="logOut" class="btn btn-outline-light">Logout</button>
-    <hr style="border: 1px solid #333" />
+    <hr style="border: 1px solid #000" />
+    <button @click="logOut" class="btn btn-outline-danger">Logout</button>
+    <hr style="border: 1px solid #000" />
     <channels></channels>
-    <hr style="border: 1px solid #333" />
+    <hr style="border: 1px solid #000" />
     <Users></Users>
   </div>
 </template>
@@ -50,3 +50,28 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+  img{
+    box-shadow: rgb(212, 203, 203) 0px 0px 7px;
+    /* margin-top: -50px; */
+  }
+
+  h2{
+    font-family: 'Ubuntu', sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  .nombre{
+    font-size: 1em;
+  }
+  
+  button{
+    letter-spacing: 2px;
+    font-weight: 600;
+    /* font-size: 5em; */
+    font-family: 'Josefin Sans', sans-serif;
+  }
+</style>>

@@ -221,3 +221,27 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+button{
+    letter-spacing: 2px;
+    font-weight: 600;
+    /* font-size: 5em; */
+    font-family: 'Josefin Sans', sans-serif;
+  }
+
+  .list-group-item{
+    width: 85%;
+    margin: auto;
+    font-family: 'Roboto Mono', monospace;
+    font-weight:100;
+    opacity: 0.80;
+  }
+
+  .active{
+    background-color: rgb(20, 20, 20);
+    border: solid 1px rgb(49, 47, 47);
+  }
+
+  
+</style>

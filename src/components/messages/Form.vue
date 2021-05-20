@@ -2,10 +2,11 @@
   <div>
     <div class="message-form">
       <!-- Progressbar-->
-      <div class="progress" v-if="uploadState !== null">
+      <div class="progress" v-if="uploadState !== null && uploadState != 'done'">
         <div
           class="progress-bar progress-bar-stripped progress-bar-animated"
           role="progressbar"
+          
         >
           {{ uploadLabel }}
         </div>
@@ -161,7 +162,7 @@ export default {
     },
     openFileModal() {
       $("#fileModal").appendTo("body").modal("show");
-      console.log("open");
+      // console.log("open");
     },
     sendFileMessage(fileUrl, ref, path){
       ref.child(path).push().set(this.createMessage(fileUrl)).then(() => {
@@ -205,19 +206,17 @@ export default {
 <style scoped>
 .message-form {
   position: fixed;
-  left: 0;
+  left: 38vw;
   bottom: 0;
-  widows: 67%;
+  margin-bottom: -0.95em;
+  width: 62vw;
   z-index: 2;
-  color: white;
-  text-align: center;
-  margin-bottom: -20px;
-  margin-left: 33.3%;
+  
 }
 
 input,
 button {
-  height: 50px;
+  height: 40px;
 }
 
 .progress {
