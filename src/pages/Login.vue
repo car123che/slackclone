@@ -18,8 +18,8 @@
       <h1 class="text-center">SLACK CLONE WEBCHAT</h1>
       <h5>No lo olvides nunca: todo comunica</h5>
     </div>
-    <div class="row mt-4">
-      <div class="col-xs-6 mb-3">
+    <div class="row mt-5">
+      <div class="col-xs-6 mb-4">
         <button
           class="btn btn-outline-danger btn-lg agrandar"
           @click="loginWithGoogle"
@@ -29,8 +29,10 @@
         </button>
       </div>
       <div class="col-xs-6">
-        <button class="btn btn-outline-primary btn-lg px-4" 
-        @click="loginWithFacebook">
+        <button
+          class="btn btn-outline-primary btn-lg px-4"
+          @click="loginWithFacebook"
+        >
           <i class="fab fa-facebook mx-2"></i>
           Login with Facebook
         </button>
@@ -39,8 +41,12 @@
   </div>
 </template>
   
+<!---------------------------------SCRIPTS------------------------------>
 <script>
+//IMPORTS
 import auth from "firebase/auth";
+import database from "firebase/database";
+
 export default {
   name: "Login",
   data() {
@@ -48,6 +54,7 @@ export default {
       error: [],
       loading: false,
       errorB: false,
+      usersRef: firebase.database().ref("users"),
     };
   },
   methods: {
@@ -60,9 +67,11 @@ export default {
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then((res) => {
+          //pass user to save in db
+          this.saveUserToUsersRef(res.user);
           //dispatch setUser action
           this.$store.dispatch("setUser", res.user);
-          sessionStorage.setItem("user", res.user.email);
+          // sessionStorage.setItem("user", res.user.email);
           //then redirect user to '/' page
           this.$router.push("/");
         })
@@ -71,6 +80,12 @@ export default {
           this.loading = false;
           this.hasErrors();
         });
+    },
+    saveUserToUsersRef(user) {
+      return this.usersRef.child(user.uid).set({
+        name: user.displayName,
+        avatar: user.photoURL,
+      });
     },
     loginWithFacebook() {
       //loading set to true
@@ -81,6 +96,7 @@ export default {
         .auth()
         .signInWithPopup(new firebase.auth.FacebookAuthProvider())
         .then((res) => {
+          this.saveUserToUsersRef(res.user);
           //dispatch setUser action
           this.$store.dispatch("setUser", res.user);
           // sessionStorage.setItem("user", res.user.email);
@@ -103,18 +119,20 @@ export default {
         this.errorB = false;
       }
     },
-  }
+  },
 };
 </script>
 
+
+<!-------------------------------------STYLES------------------------------->
 <style scoped>
 .container {
-  margin-top: -2em;
+  margin-top: -1em;
   overflow: auto;
 }
 
 .img-fluid {
-  height: 34vh;
+  height: 35vh;
 }
 .text-center {
   display: flex;
